@@ -2,6 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import static java.lang.Thread.sleep;
+import javax.swing.Timer;
 
 public class Main extends JPanel {
 
@@ -14,10 +16,14 @@ public class Main extends JPanel {
     }
 
     public Main() {
+        Timer timer = new Timer(10, e -> {
+            move();
+            repaint();
+        });
+        timer.start();
         addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
-
             }
 
             @Override
@@ -37,23 +43,23 @@ public class Main extends JPanel {
         ball.move();
         racquet.move();
     }
-
-    public void paint(Graphics g) {
-        super.paint(g);
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         ball.paint(g2d);
         racquet.paint(g2d);
 
         g2d.setColor(Color.GRAY);
-        g2d.setFont(new Font("Verdana", Font.BOLD, 30));
         g2d.drawString(String.valueOf(getScore()), 10, 30);
     }
 
     public void gameOver() {
         JOptionPane.showMessageDialog(this, "Your score is: " + getScore(), "Game Over", JOptionPane.YES_NO_OPTION);
-        System.exit(ABORT);
+        System.exit(0);
     }
+
 
     public static void main(String[] args) throws InterruptedException {
         JFrame frame = new JFrame("Mini Tennis");
@@ -62,11 +68,11 @@ public class Main extends JPanel {
         frame.setSize(300, 380);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        while (true) {
-            game.move();
-            game.repaint();
-            Thread.sleep(10);
-        }
+        game.requestFocusInWindow();
+//        while (true) {
+//            game.move();
+//            game.repaint();
+//            sleep(10);
+//        }
     }
 }
